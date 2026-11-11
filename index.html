@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ethan Joyse's Portfolio</title>
+<style>
+  :root{
+    --bg:#071b1b; --card:#0d292b; --text:#d5fff5; --muted:#7fc9c0;
+    --accent:#42d9c5; --accent-soft:#124b50; --border:#1d686c;
+    --radius:16px; --shadow:0 4px 22px rgba(0,8,12,.42);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#071b1b; --card:#0d292b; --text:#d5fff5; --muted:#7fc9c0;
+      --accent:#42d9c5; --accent-soft:#124b50; --border:#1d686c;
+      --shadow:0 4px 22px rgba(0,8,12,.42);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{color:var(--accent);text-decoration:none}
+  .container{max-width:1000px;margin:0 auto;padding:0 20px}
+ 
+  /* NAV */
+  header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:700;font-size:1.05rem}
+  .nav-links{display:flex;gap:18px;flex-wrap:wrap}
+  .nav-links a{color:var(--muted);font-size:.92rem;font-weight:500;cursor:pointer}
+  .nav-links a:hover,.nav-links a.active{color:var(--accent)}
+ 
+  /* PAGES */
+  .page{display:none}
+  .page.show{display:block}
+ 
+  section{padding:56px 0}
+  h2{font-size:1.6rem;margin-bottom:6px}
+  .sub{color:var(--muted);margin-bottom:26px}
+ 
+  /* HERO */
+  .hero{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;padding:60px 0 30px}
+  .photo{width:200px;height:200px;border-radius:50%;object-fit:cover;border:5px solid var(--card);box-shadow:var(--shadow);background:var(--accent-soft)}
+  .photo-fallback{width:200px;height:200px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:3.4rem;font-weight:700;color:var(--accent);background:var(--accent-soft);border:5px solid var(--card);box-shadow:var(--shadow)}
+  .hero h1{font-size:2.4rem;line-height:1.15;margin-bottom:6px}
+  .role{color:var(--accent);font-weight:600;margin-bottom:12px}
+  .tagline{color:var(--muted);max-width:520px;margin-bottom:20px}
+  .btn{display:inline-block;padding:10px 20px;border-radius:999px;font-weight:600;font-size:.92rem;border:1px solid var(--accent);cursor:pointer;font-family:inherit}
+  .btn.primary{background:var(--accent);color:#062322}
+  .btn.ghost{background:transparent;color:var(--accent)}
+  .btn+.btn{margin-left:8px}
+ 
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+  .card p+p{margin-top:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+ 
+  /* VIDEO */
+  .video-wrap{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:#061416;box-shadow:var(--shadow)}
+  .video-wrap iframe,.video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-empty{display:flex;align-items:center;justify-content:center;color:#7fc9c0;text-align:center;padding:20px;position:absolute;inset:0}
+ 
+  /* SKILLS */
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:var(--accent-soft);color:var(--accent);padding:6px 14px;border-radius:999px;font-size:.88rem;font-weight:600}
+ 
+  /* TIMELINE */
+  .item{padding-left:18px;border-left:3px solid var(--accent-soft);margin-bottom:22px}
+  .item h3{font-size:1.02rem}
+  .item .when{color:var(--muted);font-size:.85rem}
+ 
+  /* CONTACT */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .row{display:flex;gap:12px;margin-bottom:14px}
+  .row .ico{font-size:1.2rem;width:28px}
+  .row small{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  form.f label{display:block;font-size:.85rem;font-weight:600;margin:10px 0 4px}
+  input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+  textarea{resize:vertical;min-height:110px}
+ 
+  /* LINKS PAGE */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .filters button{border:1px solid var(--border);background:var(--card);color:var(--text);padding:6px 14px;border-radius:999px;cursor:pointer;font:inherit;font-size:.86rem}
+  .filters button.on{background:var(--accent);color:#d5fff5;border-color:var(--accent)}
+  .link-card{display:flex;flex-direction:column;gap:6px;position:relative;transition:transform .15s}
+  .link-card:hover{transform:translateY(-3px)}
+  .link-card .cat{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);font-weight:700}
+  .link-card h3{font-size:1.05rem;color:var(--text)}
+  .link-card .url{font-size:.8rem;color:var(--muted);word-break:break-all}
+  .del{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem}
+  .del:hover{color:#55e7d1}
+  .note{font-size:.82rem;color:var(--muted);margin-top:10px}
+ 
+  footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 0 40px;border-top:1px solid var(--border)}
+ 
+  @media (max-width:720px){
+    .hero{grid-template-columns:1fr;text-align:center;justify-items:center}
+    .hero h1{font-size:1.9rem}
+    .contact-grid{grid-template-columns:1fr}
+    .nav-links{gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <nav>
+      <div class="brand" id="brandName">Your Name</div>
+      <div class="nav-links">
+        <a data-go="home" data-scroll="top" class="active">Home</a>
+        <a data-go="home" data-scroll="about">About</a>
+        <a data-go="home" data-scroll="video">Video</a>
+        <a data-go="home" data-scroll="projects">Projects</a>
+        <a data-go="home" data-scroll="contact">Contact</a>
+        <a data-go="links">My Links</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= PAGE 1: PORTFOLIO ================= -->
+<main id="page-home" class="page show">
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero" id="top">
+      <div>
+        <img id="photo" class="photo" src="ethanpic.png" alt="Profile photo">
+        <div id="photoFallback" class="photo-fallback">YN</div>
+      </div>
+      <div>
+        <h1 id="heroName">Hi, I'm Ethan Joyse</h1>
+        <div class="role" id="heroRole">Student At ASB</div>
+        <p class="tagline" id="heroTagline">Just a creative mind navigating life through fashion, art, stories, and a little bit of beautiful chaos.</p>
+        <a class="btn primary" data-go="home" data-scroll="contact">Get in touch</a>
+        <a class="btn ghost" data-go="links">See my links</a>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <h2>About me</h2>
+      <p class="sub">A Little About Me</p>
+      <div class="card">
+        <p>Hi! I'm Ethan, but you can call me EJ. I'm a creative individual with a love for fashion, art, design, storytelling, and pretty much anything that allows me to express myself.</p>
+
+        <p>I've always been drawn to the world of creativity. Whether it's experimenting with clothing, exploring different aesthetics, sketching out ideas, discovering new music, watching films, or finding inspiration in the most unexpected places, I love looking at the world through a creative lens. I'm particularly passionate about fashion and its ability to communicate identity, emotions, culture, and individuality without necessarily saying a word.</p>
+
+        <p>I'm someone who's constantly curious, always exploring new interests, and never short of ideas. I enjoy experimenting, thinking outside the box, and turning random thoughts into something tangible. I believe inspiration can come from absolutely anywhere — a song, a film, a conversation, a photograph, or even the most ordinary everyday experiences.</p>
+
+        <p>Beyond the creative side, I'm a huge pop culture enthusiast, a music lover, an occasional overthinker, and someone who appreciates the little things in life. I love cooking, baking, discovering new things, and having conversations that somehow go from completely unserious to unexpectedly philosophical.</p>
+
+        <p>This website is a little corner of the internet where I bring together my interests, ideas, experiments, and creative journey. It's a reflection of who I am, what I love, and everything I'm still figuring out along the way.</p>
+
+        <p>I'm still learning, still experimenting, and still finding my place in the creative world. And honestly, that's the fun part. Welcome to my world!</p>
+      </div>
+      <div style="height:24px"></div>
+      <h2 style="font-size:1.2rem">Skills</h2>
+      <div class="chips" id="skills" style="margin-top:12px"></div>
+    </section>
+
+    <!-- VIDEO -->
+    <section id="video">
+      <h2>Self-introduction video</h2>
+      <p class="sub">A quick hello in my own words</p>
+      <div class="video-wrap" id="videoBox"></div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" style="padding-top:0">
+      <h2>Projects</h2>
+      <p class="sub">Selected things I've made</p>
+      <div class="grid" id="projectGrid"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <h2>Contact &amp; address</h2>
+      <p class="sub">Let's talk</p>
+      <div class="contact-grid">
+        <div class="card" id="contactCard"></div>
+        <div class="card">
+          <form class="f" id="mailForm">
+            <label for="n">Your name</label>
+            <input id="n" required>
+            <label for="e">Your email</label>
+            <input id="e" type="email" required>
+            <label for="m">Message</label>
+            <textarea id="m" required></textarea>
+            <div style="margin-top:14px"><button class="btn primary" type="submit">Send message</button></div>
+            <p class="note">This opens your email app with the message ready to send.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ================= PAGE 2: LINKS ================= -->
+<main id="page-links" class="page">
+  <div class="container">
+    <section>
+      <h2>My links</h2>
+      <p class="sub">Designs, profiles and websites I want to share (Canva, Behance, GitHub and more)</p>
+
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="linkGrid"></div>
+
+      <div style="height:34px"></div>
+      <div class="card" style="max-width:560px">
+        <h3 style="margin-bottom:6px">Add a new link</h3>
+        <form class="f" id="linkForm">
+          <label for="lt">Title</label>
+          <input id="lt" placeholder="e.g. My Canva Poster Designs" required>
+          <label for="lu">URL</label>
+          <input id="lu" type="url" placeholder="https://www.canva.com/..." required>
+          <label for="lc">Category</label>
+          <input id="lc" placeholder="e.g. Canva, Social, Projects" value="General">
+          <div style="margin-top:14px"><button class="btn primary" type="submit">Add link</button></div>
+          <p class="note">Links added here are saved in this browser only. To make a link permanent for every visitor, add it to the <code>links</code> list inside the code (see the CONFIG section).</p>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="container">&copy; <span id="year"></span> <span id="footName">Your Name</span>. All rights reserved.</div>
+</footer>
+
+<script>
+/* =====================================================================
+   CONFIG — EDIT EVERYTHING IN THIS BLOCK TO MAKE THE SITE YOURS
+   ===================================================================== */
+const CONFIG = {
+  name: "Ethan Joyse",
+  initials: "EJ",
+  role: "Student At ASB",
+  tagline: "Just a creative mind navigating life through fashion, art, stories, and a little bit of beautiful chaos.",
+
+  // Put your photo in the same folder as this file
+  photo: "ethanpic.png",
+
+  skills: ["Canva", "Graphic Design", "Photography", "Video Editing", "Communication", "Teamwork"],
+
+  // Self-introduction video file, saved in the same folder as this file.
+  // The name must match your real file name exactly.
+  video: "Video-74869.mp4",
+
+  projects: [
+    { title: "Project 1", text: "A Study On The Evolution Of Portugese Culture In Goa", link: "https://canva.link/yjdkijgspeinfn1" }
+  ],
+
+  contact: {
+    email: "ethanjoyse1234@gmail.com",
+    phone: "+91 8590461907",
+    addressLines: [
+      "Vimala Sadanam",
+      "Mulavana P.O, Perayam",
+      "Near NSS HS, Kollam",
+      "Kerala, India - 691503"
+    ],
+  },
+
+  // PERMANENT links shown on the "My Links" page. Add as many as you like.
+  links: [
+    { title: "My Best Non AI Presentation", url: "https://canva.link/yjdkijgspeinfn1", category: "Canva" },
+    { title: "Instagram", url: "https://www.instagram.com/ethansvlogss", category: "Social" }
+  ]
+};
+/* ===================== END CONFIG ===================== */
+
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = u => /^(https?:|mailto:|tel:|#)/i.test(u) ? u : "#";
+
+/* ---------- basic info ---------- */
+document.title = CONFIG.name + " | Portfolio";
+$("brandName").textContent = CONFIG.name;
+$("footName").textContent = CONFIG.name;
+$("heroName").textContent = "Hi, I'm " + CONFIG.name;
+$("heroRole").textContent = CONFIG.role;
+$("heroTagline").textContent = CONFIG.tagline;
+$("year").textContent = new Date().getFullYear();
+
+/* ---------- photo with fallback ---------- */
+const photo = $("photo");
+photo.src = CONFIG.photo;
+photo.onerror = () => {
+  photo.style.display = "none";
+  const fb = $("photoFallback");
+  fb.textContent = CONFIG.initials;
+  fb.style.display = "flex";
+};
+
+/* ---------- skills ---------- */
+$("skills").innerHTML = CONFIG.skills.map(s => `<span class="chip">${esc(s)}</span>`).join("");
+
+/* ---------- video ---------- */
+(function(){
+  const box = $("videoBox");
+  const v = (CONFIG.video || "").trim();
+  if(!v){
+    box.innerHTML = '<div class="video-empty">Your introduction video will appear here.<br>Add a YouTube link or a video file in the CONFIG section.</div>';
+    return;
+  }
+  const yt = v.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  if(yt){
+    box.innerHTML = `<iframe src="https://www.youtube.com/embed/${yt[1]}" title="Introduction video" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    box.innerHTML = `<video controls preload="metadata" src="${esc(v)}"></video>`;
+  }
+})();
+
+/* ---------- projects ---------- */
+$("projectGrid").innerHTML = CONFIG.projects.map(p => `
+  <div class="card">
+    <h3 style="margin-bottom:6px">${esc(p.title)}</h3>
+    <p style="color:var(--muted);margin-bottom:12px">${esc(p.text)}</p>
+    <a href="${esc(safeUrl(p.link))}" target="_blank" rel="noopener">View project →</a>
+  </div>`).join("");
+
+/* ---------- contact ---------- */
+const c = CONFIG.contact;
+$("contactCard").innerHTML = `
+  <div class="row"><span class="ico">📍</span><div><small>Address</small>${c.addressLines.map(esc).join("<br>")}<br><a href="${esc(safeUrl(c.mapLink))}" target="_blank" rel="noopener">Open in Google Maps →</a></div></div>
+  <div class="row"><span class="ico">✉️</span><div><small>Email</small><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div></div>
+  <div class="row"><span class="ico">📞</span><div><small>Phone</small><a href="tel:${esc(c.phone.replace(/\s/g,''))}">${esc(c.phone)}</a></div></div>`;
+
+$("mailForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const body = `Hi ${CONFIG.name},\n\n${$("m").value}\n\nFrom: ${$("n").value} (${$("e").value})`;
+  location.href = `mailto:${CONFIG.contact.email}?subject=${encodeURIComponent("Message from your portfolio")}&body=${encodeURIComponent(body)}`;
+});
+
+/* ---------- LINKS PAGE ---------- */
+const STORE_KEY = "portfolio_extra_links";
+function loadExtra(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }catch(e){ return []; }
+}
+function saveExtra(arr){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(arr)); }catch(e){}
+}
+let extra = loadExtra();
+let activeCat = "All";
+
+function renderLinks(){
+  const all = [
+    ...CONFIG.links.map(l => ({...l, custom:false})),
+    ...extra.map((l,i) => ({...l, custom:true, idx:i}))
+  ];
+  const cats = ["All", ...new Set(all.map(l => l.category || "General"))];
+  if(!cats.includes(activeCat)) activeCat = "All";
+
+  $("filters").innerHTML = cats.map(k =>
+    `<button class="${k===activeCat?'on':''}" data-cat="${esc(k)}">${esc(k)}</button>`).join("");
+
+  const shown = all.filter(l => activeCat==="All" || (l.category||"General")===activeCat);
+  $("linkGrid").innerHTML = shown.map(l => {
+    let host = l.url;
+    try{ host = new URL(l.url).hostname.replace(/^www\./,""); }catch(e){}
+    return `
+    <div class="card link-card">
+      ${l.custom ? `<button class="del" title="Remove" data-del="${l.idx}">×</button>` : ""}
+      <span class="cat">${esc(l.category||"General")}</span>
+      <a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener"><h3>${esc(l.title)}</h3></a>
+      <span class="url">${esc(host)}</span>
+    </div>`;
+  }).join("") || '<p class="sub">No links yet.</p>';
+}
+
+$("filters").addEventListener("click", e => {
+  const b = e.target.closest("button[data-cat]");
+  if(b){ activeCat = b.dataset.cat; renderLinks(); }
+});
+$("linkGrid").addEventListener("click", e => {
+  const d = e.target.closest("button[data-del]");
+  if(d){ extra.splice(+d.dataset.del,1); saveExtra(extra); renderLinks(); }
+});
+$("linkForm").addEventListener("submit", e => {
+  e.preventDefault();
+  let url = $("lu").value.trim();
+  if(!/^https?:\/\//i.test(url)) url = "https://" + url;
+  extra.push({ title:$("lt").value.trim(), url, category:$("lc").value.trim() || "General" });
+  saveExtra(extra);
+  e.target.reset(); $("lc").value = "General";
+  renderLinks();
+});
+renderLinks();
+
+/* ---------- page switching ---------- */
+function showPage(name, scrollTo){
+  $("page-home").classList.toggle("show", name==="home");
+  $("page-links").classList.toggle("show", name==="links");
+  document.querySelectorAll(".nav-links a").forEach(a => {
+    a.classList.toggle("active",
+      (name==="links" && a.dataset.go==="links") ||
+      (name==="home" && a.dataset.go==="home" && (a.dataset.scroll||"top")===(scrollTo||"top")));
+  });
+  if(name==="home" && scrollTo && scrollTo!=="top"){
+    setTimeout(() => { const el = $(scrollTo); if(el) el.scrollIntoView({behavior:"smooth"}); }, 30);
+  } else {
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-go]");
+  if(a){ e.preventDefault(); showPage(a.dataset.go, a.dataset.scroll); }
+});
+</script>
+</body>
+</html>
